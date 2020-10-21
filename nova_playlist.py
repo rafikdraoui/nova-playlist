@@ -1,12 +1,12 @@
 import argparse
+import zoneinfo
 from datetime import datetime, timedelta
 from urllib.request import urlopen
 
-import pytz
 from bs4 import BeautifulSoup
 
 playlist_url = "https://www.nova.fr/radionova/radio-nova"
-paris_time = datetime.now(tz=pytz.timezone("Europe/Paris"))
+paris_time = datetime.now(tz=zoneinfo.ZoneInfo("Europe/Paris"))
 
 
 def main():
@@ -18,28 +18,29 @@ def main():
 
 
 def to_tz(tz_name):
-    if tz_name not in pytz.all_timezones:
+    if tz_name not in zoneinfo.available_timezones():
         raise argparse.ArgumentTypeError(f"{tz_name} is not a valid time zone")
-    return pytz.timezone(tz_name)
+    return zoneinfo.ZoneInfo(tz_name)
 
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Display information about the songs that recently played on Radio Nova"
+        description="Display information about the songs that recently played on Radio Nova",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     parser.add_argument(
         "-t",
         "--timezone",
-        default="US/Eastern",
+        default="Canada/Atlantic",
         type=to_tz,
-        help="Local time zone to display the song times in (default: US/Eastern)",
+        help="Local time zone to display the song times in",
     )
     parser.add_argument(
         "-o",
         "--offset",
         default=0,
         type=int,
-        help="Number of minutes that song times need to be shifted by (default: 0)",
+        help="Number of minutes that song times need to be shifted by",
     )
     return parser.parse_args()
 

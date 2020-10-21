@@ -25,6 +25,10 @@ the command line for it! _Ergo_ this little script.
 
 Or use `pip`.
 
+Python 3.9 is required, along with a IANA timezone database on your system
+(Unix-y systems should have that already, otherwise you can try installing
+`tzdata` from PyPI.)
+
 
 ## Usage
 
@@ -35,8 +39,8 @@ Or use `pip`.
     20:23  Brigitte Fontaine - Le Goudron
     ...
 
-By default, the times are in the "US/Eastern" time zone. If you want them in
-another time zone, you can pass the `-t`/`--timezone` argument:
+By default, the times are in the "Canada/Atlantic" time zone. If you want them
+in another time zone, you can pass the `-t`/`--timezone` argument:
 
     $ nova -t Europe/Berlin
     03:12  Los Camperos De Valles - El Gallo
