@@ -5,7 +5,7 @@ from urllib.request import urlopen
 
 from bs4 import BeautifulSoup
 
-playlist_url = "https://www.nova.fr/radionova/radio-nova"
+playlist_url = "https://www.nova.fr/radios/radio-nova/"
 paris_time = datetime.now(tz=zoneinfo.ZoneInfo("Europe/Paris"))
 
 
@@ -52,18 +52,14 @@ def get_playlist():
     # `month`, `hour`, etc. in the form data.
     resp = urlopen(playlist_url, data=b"")
     html = BeautifulSoup(resp.read(), "html.parser")
-    items = html.find_all("div", "square-item")
+    items = html.find_all("div", class_="wwtt_content")
     return [parse_song(item) for item in items]
 
 
 def parse_song(item):
-    artist = item.find("div", "name").text.title()
-    title = item.find("div", "description").text.title()
-
-    # The `<time>` element has a convenient `datetime` attribute, but sadly
-    # it's always set to "2012-02-11T16:24:02", so we need to read its text
-    # instead and compute the timestamp ourselves.
-    time = item.find("time").text
+    artist = item.find("h2").find("a").text.title()
+    title = item.find("div", class_="wwtt_right").find("p").text.title()
+    time = item.find("p", class_="time").text
 
     return {"artist": artist, "title": title, "time": time}
 

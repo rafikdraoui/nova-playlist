@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nova-playlist"
-version = "0.2.0"
+version = "0.3.0"
 description = "Display information about the songs that recently played on Radio Nova"
 authors = ["Rafik Draoui <rafik@rafik.ca>"]
 license = "MIT"

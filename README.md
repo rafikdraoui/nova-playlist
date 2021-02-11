@@ -59,5 +59,5 @@ structure in any way, this could also start failing miserably. But so far, so
 good!
 
 
-[0]: https://www.nova.fr/radionova/nova-la-nuit
-[1]: https://www.nova.fr/radionova/radio-nova
+[0]: https://www.nova.fr/radios/nova-la-nuit/
+[1]: https://www.nova.fr/radios/radio-nova/
