@@ -2,14 +2,18 @@ import argparse
 import zoneinfo
 from datetime import datetime, timedelta
 from urllib.request import urlopen
+from typing import Any
 
 from bs4 import BeautifulSoup
+
+Song = dict[str, str]
+Element = Any  # dummy type for BeautifulSoup's HTML element
 
 playlist_url = "https://www.nova.fr/radios/radio-nova/"
 paris_time = datetime.now(tz=zoneinfo.ZoneInfo("Europe/Paris"))
 
 
-def main():
+def main() -> None:
     args = parse_args()
     playlist = get_playlist()
     for song in playlist:
@@ -17,13 +21,13 @@ def main():
         print("{time}  {artist} - {title}".format(**song))
 
 
-def to_tz(tz_name):
+def to_tz(tz_name: str) -> zoneinfo.ZoneInfo:
     if tz_name not in zoneinfo.available_timezones():
         raise argparse.ArgumentTypeError(f"{tz_name} is not a valid time zone")
     return zoneinfo.ZoneInfo(tz_name)
 
 
-def parse_args():
+def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Display information about the songs that recently played on Radio Nova",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -45,18 +49,18 @@ def parse_args():
     return parser.parse_args()
 
 
-def get_playlist():
+def get_playlist() -> list[Song]:
 
     # The `data` kwarg is needed to force a POST request. Sending an empty body
     # will retrieve the latest information, i.e no need to provide `day`,
     # `month`, `hour`, etc. in the form data.
     resp = urlopen(playlist_url, data=b"")
     html = BeautifulSoup(resp.read(), "html.parser")
-    items = html.find_all("div", class_="wwtt_content")
+    items: list[Element] = html.find_all("div", class_="wwtt_content")
     return [parse_song(item) for item in items]
 
 
-def parse_song(item):
+def parse_song(item: Element) -> Song:
     artist = item.find("h2").find("a").text.title()
     title = item.find("div", class_="wwtt_right").find("p").text.title()
     time = item.find("p", class_="time").text
@@ -64,7 +68,7 @@ def parse_song(item):
     return {"artist": artist, "title": title, "time": time}
 
 
-def localize(local_tz, time, offset=0):
+def localize(local_tz: zoneinfo.ZoneInfo, time: str, offset: int = 0) -> str:
     hour, minute = time.split(":")
     paris_song_time = paris_time.replace(hour=int(hour), minute=int(minute))
     local_song_time = paris_song_time.astimezone(local_tz)
