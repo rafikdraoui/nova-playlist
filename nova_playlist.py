@@ -1,24 +1,31 @@
 import argparse
 import zoneinfo
+from dataclasses import dataclass
 from datetime import datetime, timedelta
-from urllib.request import urlopen
 from typing import Any
+from urllib.request import urlopen
 
 from bs4 import BeautifulSoup
 
-Song = dict[str, str]
 Element = Any  # dummy type for BeautifulSoup's HTML element
 
 playlist_url = "https://www.nova.fr/radios/radio-nova/"
 paris_time = datetime.now(tz=zoneinfo.ZoneInfo("Europe/Paris"))
 
 
+@dataclass
+class Song:
+    artist: str
+    title: str
+    time: str
+
+
 def main() -> None:
     args = parse_args()
     playlist = get_playlist()
     for song in playlist:
-        song["time"] = localize(args.timezone, song["time"], args.offset)
-        print("{time}  {artist} - {title}".format(**song))
+        song.time = localize(args.timezone, song.time, args.offset)
+        print(f"{song.time}  {song.artist} - {song.title}")
 
 
 def to_tz(tz_name: str) -> zoneinfo.ZoneInfo:
@@ -64,8 +71,7 @@ def parse_song(item: Element) -> Song:
     artist = item.find("h2").find("a").text.title()
     title = item.find("div", class_="wwtt_right").find("p").text.title()
     time = item.find("p", class_="time").text
-
-    return {"artist": artist, "title": title, "time": time}
+    return Song(artist, title, time)
 
 
 def localize(local_tz: zoneinfo.ZoneInfo, time: str, offset: int = 0) -> str:
