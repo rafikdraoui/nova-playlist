@@ -1,23 +1,12 @@
 import argparse
 import zoneinfo
-from dataclasses import dataclass
 from datetime import datetime, timedelta
-from typing import Any
 from urllib.request import urlopen
 
-from bs4 import BeautifulSoup
-
-Element = Any  # dummy type for BeautifulSoup's HTML element
+from .parser import NovaParser, Song
 
 playlist_url = "https://www.nova.fr/radios/radio-nova/"
 paris_time = datetime.now(tz=zoneinfo.ZoneInfo("Europe/Paris"))
-
-
-@dataclass
-class Song:
-    artist: str
-    title: str
-    time: str
 
 
 def main() -> None:
@@ -61,17 +50,12 @@ def get_playlist() -> list[Song]:
     # The `data` kwarg is needed to force a POST request. Sending an empty body
     # will retrieve the latest information, i.e no need to provide `day`,
     # `month`, `hour`, etc. in the form data.
-    resp = urlopen(playlist_url, data=b"")
-    html = BeautifulSoup(resp.read(), "html.parser")
-    items: list[Element] = html.find_all("div", class_="wwtt_content")
-    return [parse_song(item) for item in items]
+    with urlopen(playlist_url, data=b"") as resp:
+        data = resp.read().decode("utf-8")
 
-
-def parse_song(item: Element) -> Song:
-    artist = item.find("h2").find("a").text.title()
-    title = item.find("div", class_="wwtt_right").find("p").text.title()
-    time = item.find("p", class_="time").text
-    return Song(artist, title, time)
+    parser = NovaParser()
+    parser.feed(data)
+    return parser.songs
 
 
 def localize(local_tz: zoneinfo.ZoneInfo, time: str, offset: int = 0) -> str:
