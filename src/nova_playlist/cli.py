@@ -1,12 +1,19 @@
 import argparse
+import sys
 import zoneinfo
 
-from .nova import get_playlist
+from .nova import NovaError, get_playlist
 
 
 def main() -> None:
     args = parse_args()
-    songs = get_playlist(args.url, args.timezone, args.offset)
+
+    try:
+        songs = get_playlist(args.url, args.timezone, args.offset)
+    except NovaError as err:
+        sys.stderr.write(f"nova: {err}\n")
+        sys.exit(1)
+
     for song in songs:
         print(f"{song.time}  {song.artist} — {song.title}")
 
