@@ -44,8 +44,8 @@ def test_parser():
     parser.feed(data)
 
     assert parser.songs == [
-        Song(artist="John Fahey", title="Sunflower River Blues", time="03:07"),
-        Song(artist="Zelia Barbosa", title="Funeral Do Lavrador", time="03:05"),
+        Song(artist="john fahey", title="sunflower river blues", time="03:07"),
+        Song(artist="zelia barbosa", title="funeral do lavrador", time="03:05"),
     ]
 
 
@@ -85,7 +85,7 @@ def test_parser_incomplete_data():
     parser.feed(data)
 
     assert parser.songs == [
-        Song(artist="Zelia Barbosa", title="Funeral Do Lavrador", time="03:05"),
+        Song(artist="zelia barbosa", title="funeral do lavrador", time="03:05"),
     ]
 
 
@@ -97,16 +97,16 @@ def test_real_data():
     parser.feed(data)
 
     expected = [
-        Song(artist="Fatback Band", title="Feel My Soul", time="03:13"),
-        Song(artist="Shogun Orchestra", title="Jacmel", time="03:07"),
-        Song(artist="Nepal", title="Sundance", time="03:04"),
-        Song(artist="Laura Marling", title="Soothing", time="03:00"),
-        Song(artist="Reginald Omas Mamode Iv", title="I Guess", time="02:56"),
-        Song(artist="Christophe", title="I Sing For ...", time="02:53"),
-        Song(artist="Alicia Keys", title="Feeling U Feeling Me", time="02:51"),
-        Song(artist="Busta Rhymes", title="Everything Remains Raw", time="02:47"),
-        Song(artist="Sarah Maison", title="La Nuit", time="02:44"),
-        Song(artist="The Maytones", title="If Loving You Is Wrong", time="02:40"),
+        Song(artist="fatback band", title="feel my soul", time="03:13"),
+        Song(artist="shogun orchestra", title="jacmel", time="03:07"),
+        Song(artist="nepal", title="sundance", time="03:04"),
+        Song(artist="laura marling", title="soothing", time="03:00"),
+        Song(artist="reginald omas mamode iv", title="i guess", time="02:56"),
+        Song(artist="christophe", title="i sing for ...", time="02:53"),
+        Song(artist="alicia keys", title="feeling u feeling me", time="02:51"),
+        Song(artist="busta rhymes", title="everything remains raw", time="02:47"),
+        Song(artist="sarah maison", title="la nuit", time="02:44"),
+        Song(artist="the maytones", title="if loving you is wrong", time="02:40"),
     ]
     assert parser.songs == expected
 

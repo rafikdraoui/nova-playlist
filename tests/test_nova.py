@@ -58,8 +58,8 @@ def test_get_playlist(timezone, offset, expected_time, httpserver):
 
     assert songs == [
         Song(
-            artist="Brigitte Fontaine & Areski",
-            title="C'Est Normal",
+            artist="brigitte fontaine & areski",
+            title="c'est normal",
             time=expected_time,
         )
     ]

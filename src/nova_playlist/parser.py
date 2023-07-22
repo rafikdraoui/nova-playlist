@@ -91,11 +91,11 @@ class NovaParser(HTMLParser):
 
     def handle_data(self, data: str) -> None:
         if self.record_artist:
-            self.current_song["artist"] = data.title()
+            self.current_song["artist"] = data.lower()
             self.in_artist = False
             self.record_artist = False
         elif self.record_title:
-            self.current_song["title"] = data.title()
+            self.current_song["title"] = data.lower()
             self.in_title = False
             self.record_title = False
             self.in_song = False
